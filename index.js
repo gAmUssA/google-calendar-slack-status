@@ -16,9 +16,10 @@ const router = express.Router();
 app.post('/', (req, res, next) => {
   // check for secret token
   if (!req.body.token || req.body.token !== process.env.SECRET_TOKEN) next();
+  console.log(`Request body:\n ${req}`);
   // grab status and clean it up
   let status = req.body.title;
-  const dndToken = ' [DND]';
+  const dndToken = '[BUSY]';
   // parse event start/stop time
   const dateFormat = 'MMM D, YYYY [at] hh:mmA';
   const start = moment(req.body.start, dateFormat);
@@ -35,9 +36,11 @@ app.post('/', (req, res, next) => {
   slack.users.profile.set({
     token: process.env.SLACK_TOKEN,
     profile: JSON.stringify({
-      "status_text": `${status} from ${start.format('h:mm')} to ${end.format('h:mm a')} ${process.env.TIME_ZONE}`
+      "status_text": `${status} from ${start.format('h:mm')} to ${end.format('h:mm a')} ${process.env.TIME_ZONE}`,
+      "status_emoji": ":busy:"
     })
-  });
+  }).then(console.log)
+  .catch(console.log);
   res.status(200);
   res.send('🤘');
 });
