@@ -29,7 +29,7 @@ app.post('/', (req, res, next) => {
     slack.dnd.setSnooze({
       token: process.env.SLACK_TOKEN,
       num_minutes: end.diff(start, 'minutes')
-    });
+    }).then(console.log).catch(console.log);
     status = status.replace(dndToken, '');
   }
   // set status
